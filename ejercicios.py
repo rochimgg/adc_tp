@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+from funciones import plot_response
+
 from constants import *
 
 p = [0.8911, 0, 0, 0, 0]
@@ -37,6 +39,8 @@ plt.show()
 #################
 
 # Step response
+plot_response("step", sys, title=STEP_RESPONSE_DIAGRAM_TITLE, xlim_sup=0.55)
+
 t, y = sys.step()
 plt.plot(t, y)
 plt.xlabel(TIME_LABEL)
@@ -46,6 +50,7 @@ plt.grid()
 plt.show()
 
 # Impulse response
+plot_response("impulse", sys, title=IMPULSE_RESPONSE_DIAGRAM_TITLE, xlim_sup=0.55)
 t, y = sys.impulse()
 plt.plot(t, y)
 plt.xlabel(TIME_LABEL)
@@ -78,27 +83,3 @@ plot_response("sine", sys, f0, t, SINE_RESPONSE_F0_DIAGRAM_TITLE, 0.04)
 # Response to sinusoidal signal with frequency 10000*f0
 plot_response("sine", sys, great_f0, t, SINE_RESPONSE_GREAT_F0_TITLE, 0.01)
 
-
-def plot_response(function, system, f, x, title, xlim_sup):
-    if function == "sine":
-        fun = np.sin(2 * np.pi * f * x)
-        resp = signal.lsim(system, fun, x)[1]
-    if function == "square":
-        fun = signal.square(2 * np.pi * f * x)
-        resp = signal.lsim(system, fun, x)[1]
-    if function == "step":
-        # TODO: CHANGEME
-        resp, x = sys.step()
-    if function == "impulse":
-        fun = signal.unit_impulse(100, 'mid')
-        resp, x = sys.impulse()
-
-    plt.plot(x, fun)
-    plt.plot(x, resp)
-    plt.xlabel(TIME_LABEL)
-    plt.ylabel(AMPLITUDE_LABEL)
-    plt.title(title)
-    plt.ylim(-2, 2)
-    plt.xlim(0.5, xlim_sup)
-    plt.grid()
-    plt.show()

@@ -1,4 +1,3 @@
-
 ##############
 # Axis units #
 ##############
@@ -8,7 +7,6 @@ ANGULAR_FREQUENCY_LABEL = 'Frecuencia anglular ω [rad/s]'
 GAIN_LABEL = 'Modulo [dB]'
 PHASE_LABEL = 'Fase [rad]'
 TIME_LABEL = 'Tiempo [s]'
-
 
 ##############
 #   Titles   #
