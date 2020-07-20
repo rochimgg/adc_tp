@@ -41,10 +41,13 @@ def plot_response(function, system, f=0, title="", xlim_sup=10):
         print("plot_response failed")
 
 
-def plot_2_signals(x, y1, y2, title, xlim=None, ylim=None):
+def plot_2_signals(x, y1, y2, title, xlim=None, ylim=None, function = ""):
     try:
         plt.plot(x, y1)
         plt.plot(x, y2)
+        plt.plot(x, y1, color="orange", linewidth=2.5, linestyle="-", label=function)
+        plt.plot(x, y2, color="blue",  linewidth=2.5, linestyle="-", label="Respuesta")
+        plt.legend(loc='upper left')
         plt.xlabel(TIME_LABEL)
         plt.ylabel(AMPLITUDE_LABEL)
         plt.title(title)
@@ -56,5 +59,7 @@ def plot_2_signals(x, y1, y2, title, xlim=None, ylim=None):
         plt.show()
     except EOFError:
         print("plot_2_signals_failed")
+
+
 
 
