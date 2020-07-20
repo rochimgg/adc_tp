@@ -2,7 +2,7 @@
 # Axis units #
 ##############
 
-AMPLITUDE_LABEL = 'Amplitud [m]'
+AMPLITUDE_LABEL = 'Amplitud [V]'
 ANGULAR_FREQUENCY_LABEL = 'Frecuencia anglular ω [rad/s]'
 GAIN_LABEL = 'Modulo [dB]'
 PHASE_LABEL = 'Fase [rad]'
