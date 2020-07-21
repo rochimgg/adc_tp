@@ -1,16 +1,20 @@
 from scipy import signal
+import numpy as np
 
 ##############
 #   Filter   #
 ##############
-p = [0.8911, 0, 0, 0, 0]
-q = [1, 2539, 4.686e6, 2.894e9, 2.863e12]
+p = np.array([0.8911, 0, 0, 0, 0])
+q = np.array([1, 2539, 4.686e6, 2.894e9, 2.863e12])
 sys = signal.TransferFunction(p, q)
+t = np.linspace(0, 1, 1000000, endpoint=False)  # time sample
+w, mag, phase = signal.bode(sys)
+w0 = w[mag < -3][-1]
+f0 = w0 / (2 * np.pi)
 
 ##############
 # Axis units #
 ##############
-
 AMPLITUDE_LABEL = 'Amplitud [V]'
 ANGULAR_FREQUENCY_LABEL = 'Frecuencia anglular ω [rad/s]'
 GAIN_LABEL = 'Modulo [dB]'
@@ -20,7 +24,6 @@ TIME_LABEL = 'Tiempo [s]'
 ##############
 #   Titles   #
 ##############
-
 GAIN_DIAGRAM_TITLE = 'Diagrama de modulo'
 IMPULSE_RESPONSE_DIAGRAM_TITLE = 'Respuesta a la delta'
 PHASE_DIAGRAM_TITLE = 'Diagrama de fase'
@@ -31,3 +34,17 @@ SQUARE_RESPONSE_F0_OVER_10_DIAGRAM_TITLE = "Respuesta a una señal cuadrada de f
 SINE_RESPONSE_F0_DIAGRAM_TITLE = "Respuesta a una señal senoidal de frecuencia $f_0$"
 SINE_RESPONSE_LITTLE_F0_TITLE = "Respuesta a una señal senoidal de frecuencia $0.1\\,f_0$"
 SINE_RESPONSE_GREAT_F0_TITLE = "Respuesta a una señal senoidal de frecuencia $100\\,f_0$"
+
+##############
+#   Labels   #
+##############
+IMPULSE_LABEL = "Delta"
+SINE_LABEL = "Seno"
+SQUARE_LABEL = "Cuadrada"
+STEP_LABEL = "Escalón"
+
+################
+#   Messages   #
+################
+POLES_MESSAGE = "Los polos de la transferencia son: "
+ZEROS_MESSAGE = "Los ceros de la transferencia son: "
