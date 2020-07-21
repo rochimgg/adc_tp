@@ -1,12 +1,10 @@
-from scipy import signal
 import numpy as np
+from scipy import signal
 
 ##############
 #   Filter   #
 ##############
-p = np.array([0.8911, 0, 0, 0, 0])
-q = np.array([1, 2539, 4.686e6, 2.894e9, 2.863e12])
-sys = signal.TransferFunction(p, q)
+sys = signal.TransferFunction([0.8911, 0, 0, 0, 0], [1, 2539, 4.686e6, 2.894e9, 2.863e12])
 t = np.linspace(0, 1, 1000000, endpoint=False)  # time sample
 w, mag, phase = signal.bode(sys)
 w0 = w[mag < -3][-1]
@@ -48,3 +46,5 @@ STEP_LABEL = "Escalón"
 ################
 POLES_MESSAGE = "Los polos de la transferencia son: "
 ZEROS_MESSAGE = "Los ceros de la transferencia son: "
+OMEGA_ZERO_MESSAGE = "La frecuencia natural del circuito es ${\\omega}_0$ = "
+QUALITY_FACTOR_MESSAGE = "El factor de calidad es $Q$ = "

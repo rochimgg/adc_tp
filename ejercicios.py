@@ -4,10 +4,37 @@ from constants import *
 from funciones import plot_2_signals
 
 
-def main(argv):
+def main():
+    pass
 
+
+#####################
+# Filter Parameters #
+#####################
+
+def poles():
+    p = [0.8911, 0, 0, 0, 0]
+    q = [1, 2539, 4.686e6, 2.894e9, 2.863e12]
     zeros, poles, gain = signal.tf2zpk(p, q)
-    print(POLES_MESSAGE + poles)
+    print(POLES_MESSAGE)
+    print(poles)
+
+
+def zeros():
+    p = [0.8911, 0, 0, 0, 0]
+    q = [1, 2539, 4.686e6, 2.894e9, 2.863e12]
+    zeros, poles, gain = signal.tf2zpk(p, q)
+    print(ZEROS_MESSAGE)
+    print(zeros)
+
+
+def omega_0():
+    print(OMEGA_ZERO_MESSAGE)
+    print(w[mag < -3][-1])
+
+
+def q():
+    pass
 
 
 #################
@@ -32,6 +59,7 @@ def bode_phase():
     plt.title(PHASE_DIAGRAM_TITLE)
     plt.grid()
     plt.show()
+
 
 #################
 #   Responses   #
@@ -80,24 +108,6 @@ def square_response():
     plot_2_signals(t, fun, resp, SQUARE_RESPONSE_F0_OVER_10_DIAGRAM_TITLE, (-0.017, 0.35), label=SQUARE_LABEL)
 
 
-def poles():
-    ret = signal.tf2zpk(q,p)
-    print(POLES_MESSAGE + poles)
-
-
-def zeros():
-    dt, gain, poles, zeros = signal.tf2zpk(p, q)
-    print(ZEROS_MESSAGE + zeros)
-
-
-def omega_0():
-    pass
-
-
-def q():
-    pass
-
-
 if __name__ == "__main__":
     # execute only if run as a script
-    main("")
+    main()
