@@ -108,6 +108,5 @@ def square_response():
     plot_2_signals(t, fun, resp, SQUARE_RESPONSE_F0_OVER_10_DIAGRAM_TITLE, (-0.017, 0.35), label=SQUARE_LABEL)
 
 
-if __name__ == "__main__":
-    # execute only if run as a script
+if __name__ == "__main__":   # execute only if run as a script
     main()
