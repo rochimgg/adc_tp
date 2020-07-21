@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 from constants import *
-from funciones import plot_2_signals
+from functions import plot_2_signals
 
 
 def main():

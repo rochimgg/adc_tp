@@ -1,31 +1,31 @@
 import sys
 
-import ejercicios as ej
+import exercices as ex
 
 
 def main():
     if sys.argv[1] == "1":
-        ej.poles()
-        ej.zeros()
-        ej.omega_0()
-        ej.q()
+        ex.poles()
+        ex.zeros()
+        ex.omega_0()
+        ex.q()
     if sys.argv[1] == "2a":
         if len(sys.argv) == 2:
-            ej.bode_mag()
-            ej.bode_phase()
+            ex.bode_mag()
+            ex.bode_phase()
         else:
             if sys.argv[2] == "-mag":
-                ej.bode_mag()
+                ex.bode_mag()
             elif sys.argv[2] == "-phase":
-                ej.bode_phase()
+                ex.bode_phase()
     if sys.argv[1] == "2b":
-        ej.step_response()
+        ex.step_response()
     if sys.argv[1] == "2c":
-        ej.impulse_response()
+        ex.impulse_response()
     if sys.argv[1] == "2d":
-        ej.sine_response()
+        ex.sine_response()
     if sys.argv[1] == "2e":
-        ej.square_response()
+        ex.square_response()
 
 
 if __name__ == "__main__":
