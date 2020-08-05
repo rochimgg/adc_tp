@@ -1,6 +1,11 @@
 import numpy as np
 from scipy import signal
 
+#################
+#   execution   #
+#################
+ARGV = ["1", "2a", "-mag", "phase", "2b", "2c", "2d", "2e"]
+
 ##############
 #   Filter   #
 ##############

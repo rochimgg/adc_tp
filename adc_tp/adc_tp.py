@@ -1,32 +1,34 @@
 import sys
 
 import exercices as ex
+from constants import ARGV
 
 
-def main():
-    if sys.argv[1] == "1":
+def main(argv):
+    if "1" in sys.argv:
         ex.poles()
         ex.zeros()
         ex.omega_0()
         ex.q()
-    if sys.argv[1] == "2a":
+    if "2a" in sys.argv:
         if len(sys.argv) == 2:
             ex.bode_mag()
             ex.bode_phase()
         else:
-            if sys.argv[2] == "-mag":
+            if "-mag" in sys.argv:
                 ex.bode_mag()
-            elif sys.argv[2] == "-phase":
+            elif "-phase" in sys.argv:
                 ex.bode_phase()
-    if sys.argv[1] == "2b":
+    if "2b" in sys.argv:
         ex.step_response()
-    if sys.argv[1] == "2c":
+    if "2c" in sys.argv:
         ex.impulse_response()
-    if sys.argv[1] == "2d":
+    if "2d" in sys.argv:
         ex.sine_response()
-    if sys.argv[1] == "2e":
+    if "2e" in sys.argv:
         ex.square_response()
 
 
 if __name__ == "__main__":    # execute only if run as a script
-    main()
+    sys.argv = ARGV
+    main(ARGV)

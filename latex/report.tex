@@ -1,0 +1,65 @@
+\subsubsection{Filtro Teórico}
+
+El filtro de entrada tendra la siguiente funcion transferencia teórica \\
+
+$$H_{i}^{T}(s)=\frac{-0.27 \cdot s^{2}}{(s + 1136.16 - 1374.31j) \cdot (s + 1136.166 + 1374.31j)}$$ \\
+
+acomodando para que quede en forma canonica
+
+$$H_i(s)=\frac{-0.27 \cdot s^{2}}{s^{2}+2072.32 \cdot s + 2962355.52}$$ \\
+
+despejando a partir de la formula de polos de segundo orden
+
+$$\omega_{0}= \sqrt{2962355.52} = 1721.15 \, rad/s $$
+$$f_{0}= \frac{\omega_{0}}{2\pi} = 273.93 \, Hz $$
+$$ Q= \frac{\omega_0}{2072.32} = 0.8305 $$
+
+\subsubsection{Filtro con valores normalizados}
+
+Tomando los siguientes valores para capacitores y resistores de serie $10\%$:
+$C_{1} = 27 \, nF$, $C_{2} = 330 \, nF$, $C_{3} = 100 \, nF$, $R_{1} = 1.5 \, k\Omega$ y $R_{2} = 6.8 \, k\Omega$; la transferencia real del filtro de entrada quedará de la siguiente forma
+
+$$H_{i}^{R}(s)=\frac{-0.27 \cdot s^{2}}{s^{2}+2036.54 \cdot s + 2970885.32}$$ \\
+
+despejando a partir de la formula de polos de segundo orden
+
+$$\omega_{0}= \sqrt{2970885.32} = 1723.63 \, rad/s $$
+$$f_{0}= \frac{\omega_{0}}{2\pi} = 274.32 \, Hz $$
+$$ Q= \frac{\omega_0}{2072.32} = 0.8463 $$
+
+\subsection{Filtro de Salida}
+
+\subsubsection{Filtro Teórico}
+El filtro de salida tendra la siguiente funcion transferencia teórica \\
+
+$$H_o(s)= \frac{-3.3 \cdot s^{2}}{(s +133.34 -939.496j) \cdot (s + 133.34 +939.496j)}$$ \\
+
+acomodando para que quede en forma canonica
+
+$$H_{o}^{T}(s)=  \frac{-3.3 \cdot s^{2}}{s^{2}+266.68\cdot s + 900432.29}$$ \\
+
+despejando a partir de la formula de polos de segundo orden
+
+$$\omega_{0}= \sqrt{900432.29} = 948.91 \, rad/s $$
+$$f_{0}= \frac{\omega_{0}}{2\pi} = 151.02 \, Hz $$
+$$ Q= \frac{\omega_{0}}{266.68} = 3.56 $$ \\
+
+\subsubsection{Filtro con valores normalizados}
+
+Tomando los siguientes valores para capacitores y resistores de serie $10\%$:
+$C_{1} = 33 \, nF$, $C_{2} = 180 \, nF$, $C_{3} = 10 \, nF$, $R_{1} = 1.2 \, k\Omega$ y $R_{2} = 470 \, k\Omega$; la transferencia real del filtro de entrada quedará de la siguiente forma
+
+$$H_{o}^{R}(s)=  \frac{-3.3 \cdot s^{2}}{s^{2}+263.59\cdot s + 985027.58}$$ \\
+
+despejando a partir de la formula de polos de segundo orden
+
+$$\omega_{0}= \sqrt{900432.29} = 992.49 \, rad/s $$
+$$f_{0}= \frac{\omega_{0}}{2\pi} = 157.96 \, Hz $$
+$$ Q= \frac{\omega_{0}}{266.68} = 3.77 $$ \\
+
+\section{Conclusión}
+``I always thought something was fundamentally wrong with the universe'' \citep{adams1995hitchhiker}
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

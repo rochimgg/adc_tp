@@ -41,3 +41,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Scripts that are used to solve exercices
+filters/*
