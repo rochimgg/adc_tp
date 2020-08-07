@@ -12,8 +12,9 @@ def main(argv):
         ex.q()
     if "2a" in sys.argv:
         if len(sys.argv) == 2:
-            ex.bode_mag()
-            ex.bode_phase()
+            #ex.bode_mag()
+            #ex.bode_phase()
+            ex.bode_plot()
         else:
             if "-mag" in sys.argv:
                 ex.bode_mag()
@@ -30,5 +31,4 @@ def main(argv):
 
 
 if __name__ == "__main__":    # execute only if run as a script
-    sys.argv = ARGV
     main(ARGV)
