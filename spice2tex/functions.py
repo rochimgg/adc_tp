@@ -1,6 +1,5 @@
-import numpy as np
 import os
-from constants import *
+from sp.constants import *
 
 
 def write_full_example_header(file):

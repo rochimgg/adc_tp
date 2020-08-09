@@ -21,7 +21,7 @@ def plot_2_signals(x, y1, y2, title, xlim=None, ylim=None, signal_labels=("", ""
         if ylim is not None:
             plt.ylim(*ylim)
         plt.grid(True)
-        plt.savefig("../latex/" + file_name + '.pgf')
+        plt.savefig("../latex/images/graphics/" + file_name + '.pgf')
         plt.close()
     except EOFError:
         print("plot_2_signals_failed")
@@ -47,7 +47,7 @@ def plot_2_signals_same_log_x(x, y1, y2, title, xlim=None, axis_labels=("", "", 
         fig.tight_layout()
         plt.show()
         plt.grid(True)
-        plt.savefig("../latex/" + file_name + '.pgf')
+        plt.savefig("../latex/images/graphics/" + file_name + '.pgf')
         plt.close()
     except EOFError:
         print("plot_2_signals_same_log_x() failed")

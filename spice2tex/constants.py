@@ -10,12 +10,20 @@ FULL_EXAMPLE_HEADER = '''\\documentclass[a4paper,12pt]{article}
 \\begin{document}
 '''
 
-CIRCUIT_BEGINNING = '''\\ctikzset{tripoles/mos style/arrows}
+CIRCUIT_BEGINNING_TEX = '''\\ctikzset{tripoles/mos style/arrows}
+\\begin{circuitikz}[transform shape,scale=1]
+'''
+
+CIRCUIT_BEGINNING_PGF = '''\\documentclass[margin=10pt]{standalone}
+\\usepackage[siunitx]{circuitikz}
+\begin{document}
+\\ctikzset{tripoles/mos style/arrows}
 \\begin{circuitikz}[transform shape,scale=1]
 '''
 
 CIRCUIT_END = '''
-\\end{circuitikz}'''
+\\end{circuitikz}
+'''
 
 END_DOCUMENT = '''\n\\end{document}'''
 
