@@ -159,7 +159,7 @@ def impulse_comparison():
     (t_a, resp_a) = sys_a.impulse(T=t)
     (t_c, resp_c) = t, -88.06 * np.exp(-131.8 * t) * (np.cos(983.7 * t) - 3.91 * np.sin(983.7 * t)) - 1961 * np.exp(
         -1018 * t) * (np.cos(1390 * t) + .6 * np.sin(1390 * t))
-    plot_multiple_signals(((t_a, resp_a), (t_c, resp_c)), IMPULSE_RESPONSE_COMPARISON_DIAGRAM_TITLE, None, (-0.003, 0.06),
+    plot_multiple_signals(((t_a, resp_a), (t_c, resp_c)), IMPULSE_RESPONSE_COMPARISON_DIAGRAM_TITLE, (-0.003, 0.06), None,
                           (TIME_LABEL, AMPLITUDE_LABEL), IMPULSE_COMPARISON_FILE_NAME,
                           (ANALYTIC_LABEL, CALCULATED_LABEL))
 
@@ -232,7 +232,7 @@ def sine_response_comparison():
     fun = np.sin(2 * np.pi * little_f0 * t)
     resp_a = signal.lsim(sys_a, fun, t)[1]
     (t_r, resp_r) = signal_csv2tex("../ltspice/simulations/filter_4th_order_mf_sine_f0_over_10.csv")
-    plot_multiple_signals(((t_r, resp_r), (t, resp_a)), SINE_RESPONSE_LITTLE_F0_COMPARISON_DIAGRAM_TITLE, (-0.02, 0.4),
+    plot_multiple_signals(((t_r, resp_r), (t, resp_a)), SINE_RESPONSE_LITTLE_F0_COMPARISON_DIAGRAM_TITLE, (-0.002, 0.04),
                           None, (TIME_LABEL, AMPLITUDE_LABEL), SINE_LITTLE_F0_COMPARISON_FILE_NAME,
                           (ANALYTIC_LABEL, REAL_LABEL))
 
@@ -310,6 +310,7 @@ def main():
     step_comparison()
     square_response_comparison()
     sine_response_comparison()
+    print("termine")
 
 
 if __name__ == "__main__":  # execute only if run as a script

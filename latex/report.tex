@@ -21,7 +21,11 @@
 \usepackage{enumitem}
 \usepackage{numprint}
 \usepackage{float}
+\usepackage{import}
 \usepackage{colortbl}
+\usepackage{mathrsfs}
+\usepackage[section]{placeins}
+\usepackage[export]{adjustbox}[2011/08/13]
 \usepackage[margin=0.7in]{geometry}
 \usepackage{lipsum}% http://ctan.org/pkg/lipsum
 \usepackage{fancyhdr}% http://ctan.org/pkg/fancyhdr
@@ -30,7 +34,20 @@
 \renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
 
 \usepackage{times} % Uncomment to use the Times New Roman font
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage[siunitx,american]{circuitikz}
+\usetikzlibrary{bending}
+\usetikzlibrary{arrows}
+\usepackage{pgf}
 
+
+%% and, on pdftex
+\usepackage[utf8]{inputenc}\DeclareUnicodeCharacter{2212}{-}
+%%
+%% or, on luatex and xetex
+\usepackage{unicode-math}
+%%
 \usepackage{authblk} % author package
 \usepackage{unicode-math}
 \usepackage[utf8]{inputenc}\DeclareUnicodeCharacter{2212}{-}
@@ -48,15 +65,11 @@
 
 \setlength{\parindent}{0cm}
 
-\input{step.pgf}
-\input{impulse.pgf}
-\input{bode_plot.pgf}
-\input{sine_f0.pgf}
-\input{sine_great_f0.pgf}
-\input{sine_little_f0.pgf}
-\input{square_10_times_f0.pgf}
-\input{square_f0.pgf}
-\input{square_f0_over_10.pgf}
+
+
+
+
+
 
 
 %----------------------------------------------------------------------------------------
@@ -73,22 +86,69 @@ Análisis de Circuitos - Trabajo Final \\
 
 \date{\today} %Date for the report
 
+\usepackage{tcolorbox}
+\tcbuselibrary{minted,breakable,xparse,skins}
+
+\definecolor{bg}{gray}{0.95}
+\DeclareTCBListing{mintedbox}{O{}m!O{}}{%
+breakable=true,
+listing engine=minted,
+listing only,
+minted language=#2,
+minted style=default,
+minted options={%
+linenos,
+gobble=0,
+breaklines=true,
+breakafter=,,
+fontsize=\small,
+numbersep=8pt,
+#1},
+boxsep=0pt,
+left skip=0pt,
+right skip=0pt,
+left=25pt,
+right=0pt,
+top=3pt,
+bottom=3pt,
+arc=5pt,
+leftrule=0pt,
+rightrule=0pt,
+bottomrule=2pt,
+toprule=2pt,
+colback=bg,
+colframe=orange!70,
+enhanced,
+overlay={%
+\begin{tcbclipinterior}
+    \fill[orange!20!white] (frame.south west) rectangle ([xshift=20pt]frame.north west);
+\end{tcbclipinterior}},
+#3}
 
 \begin{document}
 
+
+
     \maketitle % Insert the title, author and date
 
+
     \section{Introducción}\label{sec:introducción}
+    El siguiente trabajo consiste en el análisis, desarrollo y simulación de un filtro de orden superior a partir de una transferencia provista por la cátedra.
+
 
     \section{Desarrollo}\label{sec:desarrollo}
+
     \subsection{Análisis de la Función Transferencia}\label{subsec:análisis-de-la-función-transferencia}
-    La transferencia dada por la catedra es la siguiente:
+    La transferencia dada por la cátedra es la siguiente:
+
 
     \[H(s)=\frac{0.8911 \cdot s^{4}}{s^4+2539 \cdot s^3 + 4.686 \cdot 10^{6} \cdot s^2 + 2.894 \cdot 10^{9} \cdot s + 2.863 \cdot 10^{12}}\] \\
 
+
     Puede verse que tanto el numerador como el denominador de la transferencia son ambos polinomios de cuatro grado.
     La transferencia tendrá cuatro polos y cuatro ceros
-    Si se factoriza el denominador y se le hallan sus raices, se puede ver que los polos de la transferencia estan ubicados en dos pares de complejos conjugados de valores
+    Si se factoriza el denominador y se le hallan sus raíces, se puede ver que los polos de la transferencia están ubicados en dos pares de complejos conjugados de valores
+
 
     \begin{gather*}
         P_1 = -1136.16013946+1374.30962058j\\
@@ -97,32 +157,138 @@ Análisis de Circuitos - Trabajo Final \\
         P_4 = -133.33986054 -939.49558151j\\
     \end{gather*} \\
 
-    Ahora si se remplaza el denominador con la factorizacion del mismo
+
+    Ahora si se remplaza el denominador con la factorización del mismo
     \[H(s)=\frac{0.8911 \cdot s^{4}}{(s + 1136.16 - 1374.31j) \cdot (s + 1136.166 + 1374.31j) \cdot (s +133.34 -939.496j) \cdot (s + 133.34 +939.496j)}\] \\
     y se acomoda la transferencia
 
+
     \[H(s)=\frac{0.8911 \cdot s^{2}}{(s + 1136.16 - 1374.31j) \cdot (s + 1136.166 + 1374.31j)} \cdot \frac{s^{2}}{(s +133.34 -939.496j) \cdot (s + 133.34 +939.496j)}\] \\
 
-    Puede verse a la transferencia total como la multiplicacion de dos transferencias con polos y ceros de segundo orden.
-    Como el sistema se enuentra en regimen transformado, esto se puede traducir de forma circuital como dos circuitos que representan cada una de las trasferencias parciales, conectadas en cascada.
-    Estos filtros parciales, seran llamados de ahora en adelante como filtro de entrada $H_i(s)$ y filtro de salida $H_o(s)$
+
+    Puede verse a la transferencia total como la multiplicación de dos transferencias con polos y ceros de segundo orden.
+    Como el sistema se encuentra en régimen transformado, esto se puede traducir de forma circuital como dos circuitos que representan cada una de las trasferencias parciales, conectadas en cascada.
+    Estos filtros parciales, serán llamados de ahora en adelante como filtro de entrada $H_i(s)$ y filtro de salida $H_o(s)$
 
     \[ H(s) = H_{i}(s) \cdot H_{o}(s)\]
+
 
     \subsection{Análisis en frecuencia}\label{subsec:análisis-en-frecuencia}
     Si se analiza la función transferencia total a altas y bajas freciencias \\
 
     Si $s \rightarrow 0$
-    \[\lim_{\omega \rightarrow 0}{H(s)} = 0 \]
+    \[\lim_{ \omega \rightarrow 0}{H(s)} = 0 \]
 
     Si $\omega \rightarrow \infty$
     \[\lim_{\omega \rightarrow \infty}{H(j\omega)} = \frac{\infty}{\infty} \rightarrow \mbox{L'Hospital} \rightarrow \lim_{s \rightarrow \infty}{H(j\omega)} = 0.8911\] \\
 
-    \subsection{Diagramas de Bode}\label{subsec:diagramas-de-bode}
+    A partir del análisis de los límites de la función transferencia se puede ver que el filtro provisto es un pasa altos con una ganancia igual a $0.8911$.
 
-    \subsection{Diagramas de Modulo}\label{subsec:diagramas-de-modulo}
 
-    \subsection{Diagramas de Fase}\label{subsec:diagramas-de-fase}
+    Para la búsqueda de la frecuencia de corte, se analizó el diagrama Bode de módulo y se buscó el valor en el cuál la función pasa por $-3\,dB$. Teniendo el sistema definido, el cálculo en python se hace con las siguientes líneas de código.
+
+    \begin{mintedbox}{python}
+        w = np.linspace(1, 10000000, 1000000, endpoint=False)
+        w, mag, phase = signal.bode(sys, w)
+        w0 = w[mag < -4][-1]/(2*np.pi)
+    \end{mintedbox}
+
+    donde la frecuencia de corte del filtro de cuarto orden es $w_0 = 138\, Hz$.
+
+    Como el filtro tiene dos polos complejos conjugados, puede verse que tiene un Q para cada polo
+
+    \subsection{Calculo del factor Q}
+    Como este filtro cuenta con dos polos complejos conjugados, el factor Q de cada polo se calculará como la diferencia entre la asíntota  del diagrama de bode $20\cdot log(0.8911) = -1.0$ con los picos máximos de cada polo
+
+    \begin{gather*}
+        Q_{1} = 1.815\\
+        Q_{2} = 1.542\\
+    \end{gather*}
+
+
+
+    \subsection{Simulaciones Analíticas}
+
+    Todas las simulaciones analiticas fueron realizadas utilizando python3 y las bibliotecas matplotlib, sympy, scipy y numpy. Más adelante se mostrarán los graficos de las simulaciones con valores normalizados con el simulador LTspice.
+
+    \subsubsection{Diagrama de Bode}\label{subsec:diagramas-de-bode}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.9}{\input{images/graphics/bode_plot_analytic.pgf}}
+        \caption{Diagrama de Bode de la transferencia provista por la cátedra.}
+        \label{fig}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/bode_plot_zoom_analytic.pgf}}
+        \caption{Diagrama de Bode de la transferencia dada, donde se ven los dos polos complejos conjugados.}
+        \label{fig}
+    \end{figure}
+
+    \subsubsection{Respuesta al Escalón}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/step_analytic.pgf}}
+        \caption{Respuesta analítica de la transferencia dada al escalón unitario.}
+        \label{fig}
+    \end{figure}
+
+    \subsubsection{Respuesta al Impulso}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/impulse_analytic.pgf}}
+        \caption{Grafico de la respuesta al impulso simulado con python.}
+        \label{fig}
+    \end{figure}
+
+    \subsubsection{Respuesta a la Señal Senoidal}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/sine_f0_analytic.pgf}}
+        \caption{Respuesta analítica de la transferencia dada a una señal senoidal de frecuencia $f_0$.}
+        \label{fig}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/sine_great_f0_analytic.pgf}}
+        \caption{Respuesta analítica de la transferencia dada a una señal senoidal de frecuencia $100 \cdot f_0$.}
+        \label{fig}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.9}{\input{images/graphics/sine_little_f0_analytic.pgf}}
+        \caption{Respuesta analítica de la transferencia dada a una señal senoidal de frecuencia $0.1 \cdot f_0$.}
+        \label{fig}
+    \end{figure}
+
+
+    \subsubsection{Respuesta a la Señal Cuadrada}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.9}{\input{images/graphics/square_10_times_f0_analytic.pgf}}
+        \caption{Respuesta analítica de la transferencia dada a una señal cuadrada de frecuencia $10 \cdot f_0$.}
+        \label{fig}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.9}{\input{images/graphics/square_f0_analytic.pgf}}
+        \caption{Respuesta analítica de la transferencia dada a una señal cuadrada de frecuencia $f_0$.}
+        \label{fig}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.9}{\input{images/graphics/square_f0_over_10_analytic.pgf}}
+        \caption{Respuesta analítica de la transferencia dada a una señal cuadrada de frecuencia $0.1 \cdot f_0$.}
+        \label{fig}
+    \end{figure}
+
 
     \subsection{Filtro Pasa Altos Multiple Feedback}\label{subsec:filtro-pasa-altos-multiple-feedback}
 
@@ -158,6 +324,16 @@ Análisis de Circuitos - Trabajo Final \\
         K_{i} = -0.27\\
         K_{o} = -3.3\\
     \end{gather*}
+
+    Y el modelo del filtro elegido será el siguiente
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{1.2}{\input{images/circuit/filter_4th_order_mf_analytic.pgf}}
+        \caption{Diagrama del filtro a implementar con sus partes de entrada y salida indicadas.}
+        \label{fig}
+    \end{figure}
+
 
     \subsection{Filtro de Entrada}\label{subsec:filtro-de-entrada}
 
@@ -196,6 +372,7 @@ Análisis de Circuitos - Trabajo Final \\
 
     \subsection{Filtro de Salida}\label{subsec:filtro-de-salida}
 
+
     \subsubsection{Filtro Teórico}
     El filtro de salida tendra la siguiente funcion transferencia teórica \\
 
@@ -226,9 +403,385 @@ Análisis de Circuitos - Trabajo Final \\
         \omega_{0}= \sqrt{900432.29} = 992.49 \, rad/s\\
         f_{0}= \frac{\omega_{0}}{2\pi} = 157.96 \, Hz\\
         Q= \frac{\omega_{0}}{266.68} = 3.77\\
-    \end{gather*} \\
+    \end{gather*}
+
+    \subsection{Simulaciones del filtro normalizado}
+    \subsubsection{Diagramas de Bode}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/bode_plot_normalized.pgf}}
+        \caption{Diagrama de Bode de la transferencia calculada con valores normalizados.}
+        \label{fig}
+    \end{figure}
+
+    \subsubsection{Diagramas de Bode}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/bode_plot_zoom_normalized.pgf}}
+        \caption{Diagramas de bode de módulo y fase donde se pueden ver los dos polos complejos conjugados.}
+        \label{fig}
+    \end{figure}
+
+
+    \subsubsection{Respuesta al Escalón}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/step_normalized.pgf}}
+        \caption{Respuesta normalizada de la transferencia calculada al escalón unitario.}
+        \label{fig}
+    \end{figure}
+
+
+    \subsection{Simulaciones con LTspice}
+    \subsubsection{Filtro simulado}
+    \begin{figure}[H]
+        \centerline{\includegraphics[width=1.1\textwidth,center]{images/ltspice/spice_complete_filter.png}}
+        \caption{Simulación del filtro simulado con LTspice con componentes resistivos y capacitivos de la serie E24.}
+        \label{fig}
+    \end{figure}
+    \subsubsection{Diagramas de Bode}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.9}{\input{images/graphics/bode_plot_real.pgf}}
+        \caption{Diagrama de Bode del filtro simulado con LTspice.}
+        \label{fig}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.9}{\input{images/graphics/bode_plot_zoom_real.pgf}}
+        \caption{Diagrama de Bode del filtro simulado con LTspice, donde se ven los dos polos complejos conjugados.}
+        \label{fig}
+    \end{figure}
+
+    \subsubsection{Respuesta al escalón}
+
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/step_real.pgf}}
+        \caption{Respuesta real de la transferencia calculada al escalón unitario.}
+        \label{fig}
+    \end{figure}
+
+
+
+
+
+
+
+
+
+
+
+    \subsubsection{Respuesta al seno de frecuencia $f_0$}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/sine_f0_real.pgf}}
+        \caption{Respuesta simulada por LTspice de la transferencia calculada a una señal senoidal de frecuencia $f_0$.}
+        \label{fig}
+    \end{figure}
+
+    \subsubsection{Respuesta al seno de frecuencia $100\cdot f_0$}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/sine_great_f0_real.pgf}}
+        \caption{Respuesta simulada por LTspice a una señal senoidal de frecuencia $100 \cdot f_0$.}
+        \label{fig}
+    \end{figure}
+
+
+    \subsubsection{Respuesta al seno de frecuencia $f_0/10$}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/sine_little_f0_real.pgf}}
+        \caption{Respuesta simulada por LTspice a una señal senoidal de frecuencia $0.1 \cdot f_0$.}
+        \label{fig}
+    \end{figure}
+
+
+    \subsubsection{Respuesta a la cuadrada de frecuencia $f_0$}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/square_f0_real.pgf}}
+        \caption{Respuesta simulada por LTspice a una señal cuadrada de frecuencia $f_0$.}
+        \label{fig}
+    \end{figure}
+
+    \subsubsection{Respuesta a la cuadrada de frecuencia 10\cdot $f_0$}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/square_10_times_f0_real.pgf}}
+        \caption{Respuesta simulada por LTspice a una señal cuadrada de frecuencia $10 \cdot f_0$.}
+        \label{fig}
+    \end{figure}
+
+    \subsubsection{Respuesta a la cuadrada de frecuencia $f_0/10$}
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/square_f0_over_10_real.pgf}}
+        \caption{Respuesta simulada por LTspice a una señal cuadrada de frecuencia $0.1 \cdot f_0$.}
+        \label{fig}
+    \end{figure}
+
+
+
+    \subsection{Respuestas Analíticas}
+
+    \subsubsection{Respuesta al impulso}
+    Para conseguir las respuestas analiticas pedidas de la transferencia real, es necesario plantear la transferencia como una sumatoria de fracciones simples
+
+
+    \[H(s)=\frac{-0.27 \cdot s^{2}}{s^{2}+2036.54 \cdot s + 2970885.32} \cdot \frac{-3.3 \cdot s^{2}}{s^{2}+263.59 \cdot s + 985027.58}\] \\
+
+
+    separando en fracciones simples
+    \[H(s)=\frac{-1961.4 \cdot s -3633873.5}{s^{2}+2036.54 \cdot s + 2970885.32} + \frac{-88.1 \cdot s + 327188.5}{s^{2}+263.59 \cdot s + 985027.58} + 0.891\] \\
+
+
+    Para el termino independiente la antitransformada de laplace es directa \\
+
+    $\mathscr{L}^{-1}\{0.891\}=0.891 \cdot \delta(t)$ \\
+
+    Para los terminos restantes falta acomodar el numerador y el denominador para que tengan la forma $\frac{(s+a)}{(s+a)^2+b^2} +\frac{b}{(s+a)^2+b^2}$ \\
+
+
+
+
+    Para el primer término \\
+
+
+    \[\frac{-1961.4 \cdot s -3633873.5}{s^{2}+2036.54 \cdot s + 2970885.32} = \frac{-1961.4 \cdot (s + 1852.7)}{s^{2}+2036.54 \cdot s + 2970885.32}\] \\
+
+
+    completo cuadrados en el denominador
+
+    \[2036.54 = 2\cdot a\]
+    \[a = 1018.3\]
+
+    \[2970885.32-1018.3^2 = 1934561\]
+
+
+    \[-1961.4\cdot \frac{s + 1852,7}{{(s + 1018.3)^{2}}+1934561} = -1961.4\cdot\frac{s +1018.3 +834.4}{{(s+1018.3)^{2}}+1934561}\] \\
+
+    acomodando nuevamente y sabiendo que $\sqrt{1934561} = 1390.9$
+
+
+    \[-1961.4\cdot\frac{s +1018.3 +834.4}{{(s+1018.3)^{2}}+1934561} = -1961.4\cdot \frac{(s +1018.3) + 1390.9\cdot \frac{834.4}{1390.9}}{{(s+1018.3)^{2}}+1934561}\] \\
+
+    donde $\frac{834.4}{1390.9} = 0.60$ \\
+
+    Entonces la transformada inversa queda \\
+
+    $\mathscr{L}^{-1}\left\{\frac{-1961.4 \cdot s -3633873.5}{s^{2}+2036.54 \cdot s + 2970885.32}\right\}=-1961.4\left[\mathscr{L}^{-1}\left\{\frac{(s +1018.3)}{{(s+1018.3)^{2}}+1934561}\right\}+0.60 \cdot \mathscr{L}^{-1}\left\{\frac{1390,9}{{(s+1018.3)^{2}}+1934561}\right\}\right] $ \\
+
+    $\mathscr{L}^{-1}\left\{\frac{-1961.4 \cdot s -3633873.5}{s^{2}+2036.54 \cdot s + 2970885.32}\right\}= -1961.4\cdot \left[ e^{-1018.3 \cdot t} \cdot \cos{(1390.9\cdot t)} + 0.60 \cdot e^{-1018.3 \cdot t} \cdot \sin{(1390.9\cdot t)}  \right] $ \\
+
+
+    Para el segundo término
+
+    \[\frac{-88.1 \cdot s + 327188.5}{s^{2}+263.59 \cdot s + 985027.58} = \frac{-88.1\cdot(s -3713.8)}{s^{2}+263.59 \cdot s + 985027.58}\] \\
+
+    completo cuadrados en el denominador
+
+    \[263.59 = 2\cdot a\]
+    \[a = 131.8\]
+
+    \[985027.58-131.8^2 = 967657\]
+
+
+
+    \[-88.1\cdot \frac{s -3713.8}{{(s + 131.8)^{2}}+967657} = -88.1\cdot\frac{s +131.8 -3844.8}{{(s+131.8)^{2}}+967657}\] \\
+
+    acomodando nuevamente y sabiendo que $\sqrt{967657} = 983.7$
+
+
+    \[-88.1\cdot\frac{s +131.8 -3844.8}{{(s+131.8)^{2}}+967657} = -88.1\cdot \frac{(s +131.8) + 983.7\cdot \frac{-3844.8}{983.7}}{{(s+131.8)^{2}}+967657}\] \\
+
+    donde $\frac{-3844.8}{983.7} = -3.91$ \\
+
+    Entonces la transformada inversa queda \\
+
+    $\mathscr{L}^{-1}\left\{\frac{-88.1 \cdot s - 175.615}{s^{2}+263.59 \cdot s + 985027.58}\right\}=-88.1\left[\mathscr{L}^{-1}\left\{\frac{(s +131.8)}{{(s+131.8)^{2}}+967657}\right\}-3.91 \cdot \mathscr{L}^{-1}\left\{\frac{992.42}{{(s+131.8)^{2}}+967657}\right\}\right] $ \\
+
+    $\mathscr{L}^{-1}\left\{\frac{-88.1 \cdot s - 175.615}{s^{2}+263.59 \cdot s + 985027.58}\right\}= -88.1\cdot \left[ e^{-131.8 \cdot t} \cdot \cos{(983.7\cdot t)} -3.91 \cdot e^{-131.8 \cdot t} \cdot \sin{(983.7\cdot t)}  \right] $ \\
+
+
+
+
+    \subsubsection{Respuesta al escalon}
+
+    \[\frac{H(s)}{s}=\frac{-0.27 \cdot s^2}{s^{2}+2036.54 \cdot s + 2970885.32} \cdot \frac{-3.3 \cdot s}{s^{2}+263.59 \cdot s+ 985027,58}\] \\
+
+
+    separando en fracciones simples
+    \[H(s)=\frac{1.223 \cdot s + 529.663}{s^{2}+2036.54 \cdot s + 2970885.32} + \frac{-0.3321 \cdot s - 175.615}{s^{2}+263.59 \cdot s + 985027.58}\] \\
+
+
+    Para los dos terminos hace falta acomodar el numerador y el denominador para que queden de la forma $\frac{(s+a)}{(s+a)^2+b^2} +\frac{b}{(s+a)^2+b^2}$ \\
+
+
+    Para el primer término \\
+
+
+    \[\frac{1.223 \cdot s + 529.663}{s^{2}+2036.54 \cdot s + 2970885.32} = \frac{1.223 \cdot (s + 433.0)}{s^{2}+2036.54 \cdot s + 2970885.32}\] \\
+
+
+    completo cuadrados en el denominador
+
+    \[2036.54 = 2\cdot a\]
+    \[a = 1018.3\]
+
+    \[2970885.32-1018.3^2 = 1934561\]
+
+
+
+    \[1.223\cdot \frac{s + 433.0}{{(s + 1018.3)^{2}}+1934561} = 1.223\cdot\frac{s +1018.3 -585.3}{{(s+1018.3)^{2}}+1934561}\] \\
+
+    acomodando nuevamente y sabiendo que $\sqrt{1934561} = 1390.9$
+
+
+    \[1.223\cdot\frac{s +1018.3 -585.3}{{(s+1018.3)^{2}}+1934561} = 1.223\cdot \frac{(s +1018.3) + 1390.9\cdot \frac{-585.3}{1390.9}}{{(s+1018.3)^{2}}+1934561}\] \\
+
+    donde $\frac{-585.3}{1390.9} = -0.42$ \\
+
+    Entonces la transformada inversa queda \\
+
+    $\mathscr{L}^{-1}\left\{\frac{1.223 \cdot s + 529.663}{s^{2}+2036.54 \cdot s + 2970885.32}\right\}=1.223\left[\mathscr{L}^{-1}\left\{\frac{(s +1018.3)}{{(s+1018.3)^{2}}+1934561}\right\}-0.42 \cdot \mathscr{L}^{-1}\left\{\frac{1390,9}{{(s+1018.3)^{2}}+1934561}\right\}\right] $ \\
+
+    $\mathscr{L}^{-1}\left\{\frac{1.223 \cdot s + 529.663}{s^{2}+2036.54 \cdot s + 2970885.32}\right\}= 1.223\cdot \left[ e^{-1018.3 \cdot t} \cdot \cos{(1390.9\cdot t)} + 0.42 \cdot e^{-1018.3 \cdot t} \cdot \sin{(1390.9\cdot t)}  \right] $ \\
+
+
+    Para el segundo término
+
+    \[\frac{-0.3321 \cdot s - 175.615}{s^{2}+263.59 \cdot s + 985027.58} = \frac{-0.3321\cdot(s + 528.80)}{s^{2}+263.59 \cdot s + 985027.58}\] \\
+
+    completo cuadrados en el denominador
+
+    \[263.59 = 2\cdot a\]
+    \[a = 131.8\] \\
+
+    \[985027.58-131.8^2 = 967657\]
+
+
+
+    \[-0.3321\cdot \frac{s + 528.80}{{(s + 131.8)^{2}}+967657} = -0.3321\cdot\frac{s +131.8 + 397.0}{{(s+131.8)^{2}}+967657}\] \\
+
+    acomodando nuevamente y sabiendo que $\sqrt{967657} = 983.7$
+
+
+    \[-0.3321\cdot \frac{s + 528.80}{{(s + 131.8)^{2}}+967657} = -0.3321\cdot \frac{(s +131.8) + 983.7\cdot \frac{397.8}{983.7}}{{(s+131.8)^{2}}+967657}\] \\
+
+    donde $\frac{397.0}{983.7} = 0.40$ \\
+
+    Entonces la transformada inversa queda \\
+
+    $\mathscr{L}^{-1}\left\{\frac{-0.3321 \cdot s - 175.615}{s^{2}+263.59 \cdot s + 985027.58}\right\}=-0.3321\left[\mathscr{L}^{-1}\left\{\frac{(s +131.8)}{{(s+131.8)^{2}}+967657}\right\}+0.40 \cdot \mathscr{L}^{-1}\left\{\frac{992.42}{{(s+131.8)^{2}}+967657}\right\}\right] $ \\
+
+    $\mathscr{L}^{-1}\left\{\frac{-0.3321 \cdot s - 175.615}{s^{2}+263.59 \cdot s + 985027.58}\right\}= -0.3321\cdot \left[ e^{-131.8 \cdot t} \cdot \cos{(983.7\cdot t)} + 0.40 \cdot e^{-131.8 \cdot t} \cdot \sin{(983.7\cdot t)}  \right] $
+
+
+    \subsubsection{Respuesta al seno de frecuencia $f =100\, f_0$}
+    Para conocer la respuesta a un seno de frecuencia $\omega_0$ basta con evaluar la función transferencia con $s = j\omega$, separar el modulo de la fase y colocarlos en una expresion $r \cdot \sin(\omega\cdot t + \phi)$
+
+
+
+    \[H(s)=\frac{-1961.4 \cdot s -3633873.5}{s^{2}+2036.54 \cdot s + 2970885.32} + \frac{-88.1 \cdot s + 327188.5}{s^{2}+263.59 \cdot s + 985027.58} + 0.891\] \\
+
+    \[H(j\omega)=\frac{-1961.4 \cdot j\omega -3633873.5}{(j\omega)^{2}+2036.54 \cdot j\omega + 2970885.32} + \frac{-88.1 \cdot j\omega + 327188.5}{(j\omega)^{2}+263.59 \cdot j\omega + 985027.58} + 0.891\] \\
+
+    si tomo $w = 200 \pi \cdot f_0 rad/seg$
+
+    \[H(j\cdot  200 \pi \cdot f_0)=\frac{-1961.4 \cdot j\cdot  200 \pi \cdot f_0 -3633873.5}{(j\cdot  200 \pi \cdot f_0)^{2}+2036.54 \cdot j\cdot  200 \pi \cdot f_0 + 2970885.32} + \frac{-88.1 \cdot j\cdot  200 \pi \cdot f_0 + 327188.5}{(j\cdot  200 \pi \cdot f_0)^{2}+263.59 \cdot j\cdot  200 \pi \cdot f_0 + 985027.58} + 0.891\] \\
+
+    acomodando partes real e imaginaria
+
+    \[H(j\cdot  200 \pi \cdot f_0)= 0.89096 + 0.02352 \cdot j = 0.89122 \angle 0.0264 rad\] \\
+
+    Entonces la respuesta será $0.9\sin(\omega \cdot t + 0.23 )$ \\
+
+    \subsection{Comparaciones}
+
+    \subsubsection{Respuestas al impulso}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/impulse_comparison.pgf}}
+        \caption{Comparacion de las respuestas al impulso.}
+        \label{fig}
+    \end{figure}
+
+    \subsubsection{Respuestas al escalón}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/step_comparison.pgf}}
+        \caption{Comparacion de las respuestas al escalon.}
+        \label{fig}
+    \end{figure}
+
+    Puede verse en el grafico comparativo que la respuesta "real", es decir la simulada con el LTspice, se ve como un pico. Esto podría suceder porque los amplificadores operacionales reales no responden a la frecuencia de la misma forma que lo haría  un amplificador ideal.
+    \subsubsection{Respuestas al seno}
+
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/sine_f0_comparison.pgf}}
+        \caption{Comparacion de las respuestas al seno de frecuencia $f0$.}
+        \label{fig}
+    \end{figure}
+
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/sine_great_f0_comparison.pgf}}
+        \caption{Comparacion de las respuestas al seno de frecuencia $100\, f0$.}
+        \label{fig}
+    \end{figure}
+
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/sine_little_f0_comparison.pgf}}
+        \caption{Comparacion de las respuestas al seno de frecuencia $f0/10$.}
+        \label{fig}
+    \end{figure}
+
+    \subsubsection{Respuestas a la cuadrada}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/square_f0_comparison.pgf}}
+        \caption{Comparacion de las respuestas al seno de frecuencia $f0$.}
+        \label{fig}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/square_10_times_f0_comparison.pgf}}
+        \caption{Comparacion de las respuestas al seno de frecuencia $10\, f0$.}
+        \label{fig}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \scalebox{0.85}{\input{images/graphics/square_f0_over_10_comparison.pgf}}
+        \caption{Comparacion de las respuestas al seno de frecuencia $f0/10$.}
+        \label{fig}
+    \end{figure}
+
 
     \section{Conclusión}\label{sec:conclusión}
+    Como conclusión se puede decir que se pudo implementar exitosamente un filtro de orden superior a partir de su función transferencia. Para ello fue investigado el tipo de filtro pasa altos de retroalimentación múltiple. Fue realizado un modelo numérico para el estudio analítico del filtro, fue aplicado el mismo modelo para el estudio del filtro desarrollado con valores normalizados, fue simulado con el LTspice para ver su respuesta a determinadas funciones y para finalizar, se calculó la respuesta a mano de algunas respuestas también.
+    Por último, se dejó la comparativa grafica de las respuestas obtenidas por los distintos medios.
+
+
+
+
+
+
 
 \end{document}
 

@@ -58,5 +58,4 @@ python3 adc_tp.py 2a -phase
 ```
 
 
-## ¿Por que en ingles?
 
