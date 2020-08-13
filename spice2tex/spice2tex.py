@@ -1,7 +1,6 @@
 #!/usr/local/bin/python3
 # from functions import *
-from sp.constants import *
-from sp.functions import *
+from functions import *
 
 
 def dir_spice2tex(path='.', final_path="", ltspice_directory=r'/Users/rgallo/sym', full_example=0):
@@ -85,7 +84,7 @@ def spice2tex(file_name_ltspice='Draft.asc', final_path="", ltspice_directory=r'
     if full_example:
         write_full_example_header(f)
 
-    f.write(CIRCUIT_BEGINNING_TEX)
+    f.write(CIRCUIT_BEGINNING)
     f.write(node_coordinates)
 
     for component in components_add_memory:
@@ -233,7 +232,7 @@ def spice2pgf(file_name_ltspice='Draft.asc', final_path="", ltspice_directory=r'
 
     f = open(save_file, "w")
 
-    f.write(CIRCUIT_BEGINNING_PGF)
+    f.write(CIRCUIT_BEGINNING)
     f.write(node_coordinates)
 
     for component in components_add_memory:
@@ -307,19 +306,17 @@ def spice2pgf(file_name_ltspice='Draft.asc', final_path="", ltspice_directory=r'
             f.write('\\draw %s to[short,-] %s ;\n' % (get_node_name(x[0], node_list), get_node_name(x[1], node_list)))
 
     f.write(CIRCUIT_END)
-    if full_example:
-        f.write(END_DOCUMENT)
 
     f.close()
 
     print('Congratulations. The run was successful.')
 
 
-def dir_spice2pgf(path='.', final_path="", ltspice_directory=r'/Users/rgallo/sym', full_example=0):
+def dir_spice2pgf(path='.', final_path="", ltspice_directory=r'/Users/rgallo/sym'):
     for filename in os.listdir(path):
         if os.path.isfile(os.path.join(path, filename)) and filename.endswith('.asc'):
             print('Convert: ' + filename)
-            spice2pgf(path + os.sep + filename, final_path, ltspice_directory=ltspice_directory, full_example=full_example)
+            spice2pgf(path + os.sep + filename, final_path, ltspice_directory=ltspice_directory)
 
 
 def main():
